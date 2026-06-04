@@ -5,17 +5,23 @@
 
 local padding = ScreenScale(32)
 
-surface.CreateFont("swrp_tech_title", { font = "Trebuchet MS", size = 18, weight = 800, antialias = true, shadow = true })
-surface.CreateFont("swrp_tech_small", { font = "Trebuchet MS", size = 12, weight = 400, antialias = true })
-surface.CreateFont("swrp_tech_large", { font = "Trebuchet MS", size = 24, weight = 800, antialias = true, shadow = true })
+-- ============================================================
+-- TEMA: Imperio Galáctico
+-- Paleta: Negro profundo + Rojo Imperial + Gris acero
+-- ============================================================
+surface.CreateFont("swrp_tech_title",    { font = "Trebuchet MS", size = 18, weight = 800, antialias = true, shadow = true })
+surface.CreateFont("swrp_tech_small",    { font = "Trebuchet MS", size = 11, weight = 400, antialias = true })
+surface.CreateFont("swrp_tech_large",    { font = "Trebuchet MS", size = 22, weight = 800, antialias = true, shadow = true })
 surface.CreateFont("swrp_tech_skin_nav", { font = "Trebuchet MS", size = 22, weight = 900, antialias = true })
 
-local COLOR_BG = Color(8, 12, 18, 150)
-local COLOR_SLOT = Color(12, 20, 30, 200)
-local COLOR_BORDER = Color(30, 80, 120, 100)
-local COLOR_BORDER_HOVER = Color(0, 210, 255, 255)
-local COLOR_ACCENT = Color(0, 180, 255, 180)
-local COLOR_TEXT_TITLE = Color(140, 200, 255, 255)
+-- Paleta Imperial
+local COLOR_BG           = Color(4, 4, 6, 200)         -- Negro casi total
+local COLOR_SLOT         = Color(10, 10, 14, 220)       -- Gris muy oscuro
+local COLOR_BORDER       = Color(80, 80, 90, 120)       -- Gris acero sutil
+local COLOR_BORDER_HOVER = Color(200, 20, 20, 255)      -- Rojo Imperial brillante
+local COLOR_ACCENT       = Color(180, 18, 18, 200)      -- Rojo Imperial
+local COLOR_TEXT_TITLE   = Color(210, 210, 215, 255)    -- Blanco grisáceo
+local COLOR_RED_DIM      = Color(140, 10, 10, 120)      -- Rojo oscuro para fondos
 
 local function CreateHUDButton(parent, text, onClick, onHover)
 	local btn = parent:Add("DButton")
@@ -73,16 +79,20 @@ local function CreateSkinSelector(parent, skinList, currentIndex, onSkinChosen)
 	parent.skinSelectorPanel = selectorPanel
 
 	selectorPanel.Paint = function(s, sw, sh)
-		-- Fondo HUD
-		surface.SetDrawColor(COLOR_SLOT)
+		-- Fondo negro imperial
+		surface.SetDrawColor(8, 6, 6, 230)
 		surface.DrawRect(0, 0, sw, sh)
-		surface.SetDrawColor(0, 0, 0, 40)
-		for i = 0, sh, 4 do surface.DrawLine(0, i, sw, i) end
-		surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 60)
+		-- Scanlines rojas muy sutiles
+		surface.SetDrawColor(80, 5, 5, 10)
+		for i = 0, sh, 3 do surface.DrawLine(0, i, sw, i) end
+		-- Borde rojo imperial
+		surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 160)
 		surface.DrawOutlinedRect(0, 0, sw, sh)
-		-- Esquinas
+		surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 40)
+		surface.DrawOutlinedRect(1, 1, sw-2, sh-2)
+		-- Esquinas rojas
 		surface.SetDrawColor(COLOR_ACCENT)
-		local cl, th = 12, 2
+		local cl, th = 14, 2
 		surface.DrawRect(0, 0, cl, th) surface.DrawRect(0, 0, th, cl)
 		surface.DrawRect(sw-cl, 0, cl, th) surface.DrawRect(sw-th, 0, th, cl)
 		surface.DrawRect(0, sh-th, cl, th) surface.DrawRect(0, sh-cl, th, cl)
@@ -92,8 +102,8 @@ local function CreateSkinSelector(parent, skinList, currentIndex, onSkinChosen)
 	-- Header con label
 	local header = selectorPanel:Add("DLabel")
 	header:SetFont("swrp_tech_small")
-	header:SetText("SKIN // ASPECTO VISUAL")
-	header:SetTextColor(Color(255, 255, 255, 30))
+	header:SetText("VARIANT.DATA // UNIT APPEARANCE")
+	header:SetTextColor(Color(180, 18, 18, 120))
 	header:Dock(TOP)
 	header:SetTall(20)
 	header:SetContentAlignment(5)
@@ -122,7 +132,7 @@ local function CreateSkinSelector(parent, skinList, currentIndex, onSkinChosen)
 	local counterLabel = navRow:Add("DLabel")
 	counterLabel:Dock(FILL)
 	counterLabel:SetFont("swrp_tech_title")
-	counterLabel:SetTextColor(COLOR_TEXT_TITLE)
+	counterLabel:SetTextColor(Color(210, 210, 215, 255))
 	counterLabel:SetContentAlignment(5)
 
 	local btnNext = navRow:Add("DButton")
@@ -146,18 +156,21 @@ local function CreateSkinSelector(parent, skinList, currentIndex, onSkinChosen)
 	modelContainer:SetTall(modelHeight)
 	modelContainer:DockMargin(8, 6, 8, 0)
 	modelContainer.Paint = function(s, sw, sh)
-		surface.SetDrawColor(0, 5, 15, 180)
+		-- Fondo negro profundo con viñeta lateral roja
+		surface.SetDrawColor(2, 2, 4, 220)
 		surface.DrawRect(0, 0, sw, sh)
-		-- Líneas de escaneo
-		surface.SetDrawColor(0, 180, 255, 6)
-		for i = 0, sh, 3 do surface.DrawLine(0, i, sw, i) end
-		-- Borde interior
-		surface.SetDrawColor(COLOR_BORDER)
+		-- Scanlines rojas muy sutiles
+		surface.SetDrawColor(60, 2, 2, 12)
+		for i = 0, sh, 2 do surface.DrawLine(0, i, sw, i) end
+		-- Borde rojo imperial
+		surface.SetDrawColor(140, 12, 12, 200)
 		surface.DrawOutlinedRect(0, 0, sw, sh)
-		-- Texto de modo
-		draw.SimpleText("HOLO.DISPLAY", "swrp_tech_small", sw - 6, sh - 14, Color(0, 180, 255, 25), TEXT_ALIGN_RIGHT)
-		-- Hint de drag
-		draw.SimpleText("[ ARRASTRAR PARA ROTAR ]", "swrp_tech_small", sw / 2, sh - 14, Color(0, 180, 255, 18), TEXT_ALIGN_CENTER)
+		surface.SetDrawColor(180, 18, 18, 50)
+		surface.DrawOutlinedRect(1, 1, sw-2, sh-2)
+		-- Etiqueta modo
+		draw.SimpleText("IMP.DATASCAN // UNIT RENDER", "swrp_tech_small", sw - 6, sh - 14, Color(180, 18, 18, 40), TEXT_ALIGN_RIGHT)
+		-- Hint controles
+		draw.SimpleText("LMB: ROTAR  |  RMB: DESPLAZAR  |  SCROLL: ZOOM", "swrp_tech_small", sw / 2, sh - 14, Color(180, 18, 18, 30), TEXT_ALIGN_CENTER)
 	end
 
 	-- DModelPanel con control total de cámara
@@ -272,7 +285,7 @@ local function CreateSkinSelector(parent, skinList, currentIndex, onSkinChosen)
 			for i = 1, total do
 				local x = (i-1) * (dotSize + dotGap)
 				local active = (i == idx)
-				surface.SetDrawColor(active and COLOR_BORDER_HOVER or COLOR_BORDER)
+				surface.SetDrawColor(active and Color(200,20,20,255) or Color(80,80,88,180))
 				surface.DrawRect(x, 0, dotSize, dotSize)
 				if active then
 					surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 40)
@@ -341,26 +354,32 @@ function PANEL:Init()
 	self.previewPanel:SetSize(previewWidth, parent:GetTall() - (padding * 2))
 	self.previewPanel:SetPos(listWidth + padding, padding)
 	self.previewPanel.Paint = function(s, sw, sh)
-		surface.SetDrawColor(COLOR_SLOT)
+		-- Fondo negro imperial con scanlines
+		surface.SetDrawColor(6, 6, 8, 240)
 		surface.DrawRect(0, 0, sw, sh)
-		
-		surface.SetDrawColor(0, 0, 0, 50)
-		for i = 0, sh, 4 do surface.DrawLine(0, i, sw, i) end
-		
-		surface.SetDrawColor(0, 0, 0, 220)
-		surface.DrawRect(0, 0, sw, 22)
-		
-		draw.SimpleText("SYS.DATA // INFO", "swrp_tech_small", 4, sh - 14, Color(255,255,255, 15), TEXT_ALIGN_LEFT)
-		draw.SimpleText("OP.RDY", "swrp_tech_small", sw - 4, 4, Color(255,255,255, 15), TEXT_ALIGN_RIGHT)
-		
-		surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 100)
-		surface.DrawLine(0, 22, sw, 22)
-		
-		surface.SetDrawColor(COLOR_BORDER.r, COLOR_BORDER.g, COLOR_BORDER.b, 40)
+		surface.SetDrawColor(0, 0, 0, 30)
+		for i = 0, sh, 3 do surface.DrawLine(0, i, sw, i) end
+
+		-- Header rojo imperial
+		surface.SetDrawColor(160, 15, 15, 220)
+		surface.DrawRect(0, 0, sw, 26)
+		surface.SetDrawColor(200, 20, 20, 120)
+		surface.DrawRect(0, 26, sw, 1)
+
+		-- Textos de cabecera estilo terminal Imperial
+		draw.SimpleText("IMPERIAL DATABANK // UNIT PROFILE", "swrp_tech_small", 8, 7, Color(220, 200, 200, 200), TEXT_ALIGN_LEFT)
+		draw.SimpleText("STATUS: ACTIVE", "swrp_tech_small", sw - 8, 7, Color(180, 18, 18, 255), TEXT_ALIGN_RIGHT)
+
+		-- Texto inferior clasificado
+		draw.SimpleText("IMPERIAL CENTER COMMAND — CLASSIFIED", "swrp_tech_small", sw/2, sh - 10, Color(180, 18, 18, 25), TEXT_ALIGN_CENTER)
+
+		-- Borde exterior gris acero
+		surface.SetDrawColor(70, 70, 78, 200)
 		surface.DrawOutlinedRect(0, 0, sw, sh)
-		
+
+		-- Esquinas rojas
 		surface.SetDrawColor(COLOR_ACCENT)
-		local cl, th = 15, 2
+		local cl, th = 18, 2
 		surface.DrawRect(0, 0, cl, th) surface.DrawRect(0, 0, th, cl)
 		surface.DrawRect(sw-cl, 0, cl, th) surface.DrawRect(sw-th, 0, th, cl)
 		surface.DrawRect(0, sh-th, cl, th) surface.DrawRect(0, sh-cl, th, cl)
@@ -374,7 +393,7 @@ function PANEL:Init()
 	self.previewTitle = self.previewContent:Add("DLabel")
 	self.previewTitle:SetFont("swrp_tech_large")
 	self.previewTitle:SetText("")
-	self.previewTitle:SetTextColor(COLOR_TEXT_TITLE)
+	self.previewTitle:SetTextColor(Color(220, 220, 225, 255))
 	self.previewTitle:Dock(TOP)
 	self.previewTitle:SetTall(40)
 	self.previewTitle:SetContentAlignment(5)
@@ -394,7 +413,7 @@ function PANEL:Init()
 	self.previewDesc = self.previewContent:Add("DLabel")
 	self.previewDesc:SetFont("swrp_tech_title")
 	self.previewDesc:SetText("")
-	self.previewDesc:SetTextColor(color_white)
+	self.previewDesc:SetTextColor(Color(180, 178, 178, 220))
 	self.previewDesc:Dock(FILL)
 	self.previewDesc:SetWrap(true)
 	self.previewDesc:SetContentAlignment(7)
@@ -406,8 +425,8 @@ function PANEL:Init()
 	
 	local titleLabel1 = self.factionPanel:Add("DLabel")
 	titleLabel1:SetFont("swrp_tech_large")
-	titleLabel1:SetText("ELEGIR FACCIÓN")
-	titleLabel1:SetTextColor(COLOR_TEXT_TITLE)
+	titleLabel1:SetText("// SELECCIÓN DE FACCIÓN")
+	titleLabel1:SetTextColor(Color(210, 210, 215, 255))
 	titleLabel1:Dock(TOP)
 	titleLabel1:SetTall(50)
 
@@ -415,7 +434,7 @@ function PANEL:Init()
 	self.factionButtonsPanel:SetWide(listWidth)
 	self.factionButtonsPanel:Dock(FILL)
 
-	local factionBack = CreateHUDButton(self.factionPanel, "VOLVER", function()
+	local factionBack = CreateHUDButton(self.factionPanel, "◄ ATRÁS", function()
 		self:SetActiveSubpanel("faction", 0)
 		self:SlideDown()
 		parent.mainPanel:Undim()
@@ -430,16 +449,21 @@ function PANEL:Init()
 	
 	local titleLabel2 = self.classPanel:Add("DLabel")
 	titleLabel2:SetFont("swrp_tech_large")
-	titleLabel2:SetText("ELEGIR CLASE")
-	titleLabel2:SetTextColor(COLOR_TEXT_TITLE)
+	titleLabel2:SetText("// DESIGNACIÓN DE RANGO")
+	titleLabel2:SetTextColor(Color(210, 210, 215, 255))
 	titleLabel2:Dock(TOP)
 	titleLabel2:SetTall(50)
 
-	-- Botones de clase
-	self.classButtonsPanel = self.classPanel:Add("ixCharMenuButtonList")
+	-- Botones de clase dentro de un DScrollPanel para soportar muchas clases
+	local classScroll = self.classPanel:Add("DScrollPanel")
+	classScroll:Dock(TOP)
+	classScroll:SetTall(0) -- se ajusta en PopulateClasses
+	classScroll:SetWide(listWidth)
+	self.classButtonsPanel = classScroll:Add("ixCharMenuButtonList")
 	self.classButtonsPanel:SetWide(listWidth)
 	self.classButtonsPanel:Dock(TOP)
-	self.classButtonsPanel:SetTall(0) -- se ajusta dinámicamente
+	self.classButtonsPanel:SetTall(0)
+	self._classScroll = classScroll -- referencia para ajustar el alto
 
 	-- Contenedor del skin selector (dentro del panel clase)
 	self.skinSelectorContainer = self.classPanel:Add("Panel")
@@ -451,8 +475,8 @@ function PANEL:Init()
 	-- Label "SELECCIONA SKIN"
 	local skinHeaderLabel = self.skinSelectorContainer:Add("DLabel")
 	skinHeaderLabel:SetFont("swrp_tech_title")
-	skinHeaderLabel:SetTextColor(COLOR_TEXT_TITLE)
-	skinHeaderLabel:SetText("SELECCIONA ASPECTO")
+	skinHeaderLabel:SetTextColor(Color(180, 18, 18, 200))
+	skinHeaderLabel:SetText("// SELECCIÓN DE VARIANTE")
 	skinHeaderLabel:Dock(TOP)
 	skinHeaderLabel:SetTall(30)
 	skinHeaderLabel:SetContentAlignment(5)
@@ -463,14 +487,14 @@ function PANEL:Init()
 	self.skinSelectorArea:Dock(FILL)
 	self.skinSelectorArea.Paint = function() end
 
-	local classBack = CreateHUDButton(self.classPanel, "VOLVER", function()
+	local classBack = CreateHUDButton(self.classPanel, "◄ ATRÁS", function()
 		self:SetActiveSubpanel("faction")
 		self.skinSelectorContainer:SetVisible(false)
 	end, function() end)
 	classBack:Dock(BOTTOM)
 
 	-- Botón "CONTINUAR" (aparece solo cuando se selecciona clase con skins)
-	self.classContinueBtn = CreateHUDButton(self.classPanel, "CONTINUAR →", function()
+	self.classContinueBtn = CreateHUDButton(self.classPanel, "CONFIRMAR ASPECTO  ▶", function()
 		self:PopulateKits(self.selectedClassIndex)
 		self:SetActiveSubpanel("kit")
 	end, function() end)
@@ -484,8 +508,8 @@ function PANEL:Init()
 	
 	local titleLabel3 = self.kitPanel:Add("DLabel")
 	titleLabel3:SetFont("swrp_tech_large")
-	titleLabel3:SetText("ELEGIR EQUIPAMIENTO")
-	titleLabel3:SetTextColor(COLOR_TEXT_TITLE)
+	titleLabel3:SetText("// ASIGNACIÓN DE EQUIPAMIENTO")
+	titleLabel3:SetTextColor(Color(210, 210, 215, 255))
 	titleLabel3:Dock(TOP)
 	titleLabel3:SetTall(50)
 
@@ -493,7 +517,7 @@ function PANEL:Init()
 	self.kitButtonsPanel:SetWide(listWidth)
 	self.kitButtonsPanel:Dock(FILL)
 
-	local kitBack = CreateHUDButton(self.kitPanel, "VOLVER", function() self:SetActiveSubpanel("class") end, function() end)
+	local kitBack = CreateHUDButton(self.kitPanel, "◄ ATRÁS", function() self:SetActiveSubpanel("class") end, function() end)
 	kitBack:Dock(BOTTOM)
 
 	-- PANEL DE DESCRIPCIÓN (IZQUIERDA)
@@ -502,15 +526,15 @@ function PANEL:Init()
 	
 	local titleLabel4 = self.description:Add("DLabel")
 	titleLabel4:SetFont("swrp_tech_large")
-	titleLabel4:SetText("DATOS DEL PERSONAJE")
-	titleLabel4:SetTextColor(COLOR_TEXT_TITLE)
+	titleLabel4:SetText("// REGISTRO DE IDENTIDAD")
+	titleLabel4:SetTextColor(Color(210, 210, 215, 255))
 	titleLabel4:Dock(TOP)
 	titleLabel4:SetTall(50)
 
-	local descBack = CreateHUDButton(self.description, "VOLVER", function() self:SetActiveSubpanel("kit") end, function() end)
+	local descBack = CreateHUDButton(self.description, "◄ ATRÁS", function() self:SetActiveSubpanel("kit") end, function() end)
 	descBack:Dock(BOTTOM)
 
-	local createBtn = CreateHUDButton(self.description, "FINALIZAR Y CREAR PERSONAJE", function()
+	local createBtn = CreateHUDButton(self.description, "▶ CONFIRMAR E INGRESAR AL IMPERIO", function()
 		if (self:VerifyProgression("description")) then
 			self:SendPayload()
 		end
@@ -545,24 +569,42 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(sw, sh)
-	ix.util.DrawBlur(self, 10)
+	ix.util.DrawBlur(self, 8)
+	-- Fondo negro imperial
 	draw.RoundedBox(0, 0, 0, sw, sh, COLOR_BG)
-	
-	surface.SetDrawColor(COLOR_BORDER.r, COLOR_BORDER.g, COLOR_BORDER.b, 10)
-	for i = 0, sw, 64 do surface.DrawLine(i, 0, i, sh) end
-	for i = 0, sh, 64 do surface.DrawLine(0, i, sw, i) end
-	
-	surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 100)
+
+	-- Grid muy sutil gris acero
+	surface.SetDrawColor(60, 60, 65, 8)
+	for i = 0, sw, 48 do surface.DrawLine(i, 0, i, sh) end
+	for i = 0, sh, 48 do surface.DrawLine(0, i, sw, i) end
+
+	-- Banda roja superior (estilo panel de control imperial)
+	surface.SetDrawColor(180, 18, 18, 180)
+	surface.DrawRect(0, 0, sw, 3)
+	surface.SetDrawColor(220, 30, 30, 80)
+	surface.DrawRect(0, 3, sw, 1)
+
+	-- Banda roja inferior
+	surface.SetDrawColor(180, 18, 18, 180)
+	surface.DrawRect(0, sh - 3, sw, 3)
+
+	-- Borde exterior gris acero
+	surface.SetDrawColor(70, 70, 78, 180)
 	surface.DrawOutlinedRect(0, 0, sw, sh)
-	surface.SetDrawColor(COLOR_ACCENT.r, COLOR_ACCENT.g, COLOR_ACCENT.b, 40)
+	surface.SetDrawColor(50, 50, 56, 100)
 	surface.DrawOutlinedRect(1, 1, sw - 2, sh - 2)
-	
+
+	-- Esquinas rojas imperiales (más grandes, estilo targeting computer)
 	surface.SetDrawColor(COLOR_ACCENT)
-	local cl, th = 30, 4
+	local cl, th = 40, 3
 	surface.DrawRect(0, 0, cl, th) surface.DrawRect(0, 0, th, cl)
 	surface.DrawRect(sw-cl, 0, cl, th) surface.DrawRect(sw-th, 0, th, cl)
 	surface.DrawRect(0, sh-th, cl, th) surface.DrawRect(0, sh-cl, th, cl)
 	surface.DrawRect(sw-cl, sh-th, cl, th) surface.DrawRect(sw-th, sh-cl, th, cl)
+
+	-- Texto clasificado estilo Imperial
+	draw.SimpleText("IMPERIAL PERSONNEL REGISTRY // CLASSIFIED", "swrp_tech_small", sw/2, sh - 10, Color(180, 18, 18, 35), TEXT_ALIGN_CENTER)
+	draw.SimpleText("GALACTIC EMPIRE — AUTHORIZED ACCESS ONLY", "swrp_tech_small", sw/2, 8, Color(180, 18, 18, 35), TEXT_ALIGN_CENTER)
 end
 
 function PANEL:UpdatePreview(title, desc, image, model)
@@ -620,15 +662,17 @@ function PANEL:PopulateClasses(factionID)
 	self.classContinueBtn:SetVisible(false)
 	local hasClasses = false
 	
-	-- Calcular altura dinámica de botones de clase
+	-- Calcular altura dinámica: máximo 3 botones visibles, luego scroll
 	local classCount = 0
 	for k, v in pairs(ix.class.list) do
 		if (v.faction == factionID) then classCount = classCount + 1 end
 	end
-	-- Máximo 2 botones visibles antes de scroll, para dejar espacio al visor 3D
-	local btnH = 60 -- 50 tall + 10 margin
-	local maxH = math.min(classCount * btnH, 2 * btnH)
-	self.classButtonsPanel:SetTall(maxH)
+	local btnH = 60
+	local maxH = math.min(classCount * btnH, 3 * btnH)
+	self.classButtonsPanel:SetTall(classCount * btnH) -- altura real para scroll interno
+	if IsValid(self._classScroll) then
+		self._classScroll:SetTall(maxH) -- ventana visible: máximo 3 botones
+	end
 
 	for k, v in pairs(ix.class.list) do
 		if (v.faction == factionID) then
@@ -708,7 +752,7 @@ function PANEL:PopulateKits(classID)
 	end
 	
 	if not hasKits then
-		CreateHUDButton(self.kitButtonsPanel, "ESTÁNDAR (SIN KIT)", function()
+		CreateHUDButton(self.kitButtonsPanel, "EQUIPAMIENTO BÁSICO IMPERIAL", function()
 			self.payload:Set("kit", "")
 			self:SetActiveSubpanel("description")
 		end, function()
@@ -778,7 +822,7 @@ function PANEL:Populate()
 			if (IsValid(panel)) then
 				local label = container:Add("DLabel")
 				label:SetFont("swrp_tech_title")
-				label:SetTextColor(COLOR_TEXT_TITLE)
+				label:SetTextColor(Color(180, 18, 18, 220))
 				label:SetText(L(k):utf8upper())
 				label:SizeToContents()
 				label:DockMargin(0, 16, 0, 2)
